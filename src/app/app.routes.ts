@@ -13,6 +13,11 @@ export const routes: Routes = [
             import('./components/home/home.component').then(m => m.HomeComponent),
     },
     {
+        path: 'admin',
+        loadChildren: () => import('./components/admin-view/admin.routes')
+        .then(m => m.ADMIN_ROUTES)
+    },
+    {
         path: '**',
         redirectTo: 'home',
     },
