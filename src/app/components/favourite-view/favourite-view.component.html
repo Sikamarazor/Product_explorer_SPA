@@ -1,1 +1,16 @@
-<p>favourite-view works!</p>
+<section>
+      <h2>Favorites</h2>
+      <div class="grid">
+        <mat-card *ngFor="let product of favorites$ | async">
+          <mat-card-title>{{ product.name }}</mat-card-title>
+          <mat-card-subtitle>Price: {{ product.price }}</mat-card-subtitle>
+          <mat-card-content>{{ product.description }}</mat-card-content>
+
+          <button mat-icon-button color="warn" (click)="toggleFavorite(product.id)">
+            <mat-icon>
+              {{ productState.isFavorite(product.id) ? 'favorite' : 'favorite_border' }}
+            </mat-icon>
+          </button>
+        </mat-card>
+      </div>
+    </section>

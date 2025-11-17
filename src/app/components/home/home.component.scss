@@ -1,0 +1,7 @@
+.grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      margin: 12px 0;
+    }
+    section { padding: 12px; }
