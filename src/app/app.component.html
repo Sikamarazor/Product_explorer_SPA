@@ -3,7 +3,9 @@
   <span class="spacer"></span>
   <button mat-button class="nav-button" routerLink="/home">Home</button>
   <button mat-button class="nav-button" routerLink="/favorites">Favorites</button>
-  <button mat-button class="nav-button" routerLink="/admin">Admin</button>
+  <button mat-button class="nav-button" routerLink="/admin" *ngIf="userService.getUserType() == 'admin'">Admin</button>
+
+  <button mat-button class="nav-button" *ngIf="userService.getUserType()" (click)="logout()">logout</button>
 </mat-toolbar>
 
 <div class="main-content">
