@@ -1,0 +1,8 @@
+<mat-tab-group [selectedIndex]="selectedTab">
+    <mat-tab label="View Products">
+        <app-manageproducts (edit)="onEditProduct($event)"></app-manageproducts>
+    </mat-tab>
+    <mat-tab label="Add Product">
+        <app-addproducts [productToEdit]="productToEdit$ | async" (saved)="onProductSaved()"></app-addproducts>
+    </mat-tab>
+</mat-tab-group>

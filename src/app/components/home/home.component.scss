@@ -1,0 +1,23 @@
+.catalog-container {
+  padding: 1rem;
+}
+
+.filter-box {
+  width: 300px;
+  margin-bottom: 1rem;
+}
+
+.empty {
+  margin-top: 2rem;
+  font-size: 1.2rem;
+  color: gray;
+  text-align: center;
+}
+
+.clickable-table tr {
+  cursor: pointer;
+}
+
+.fav-col {
+  width: 60px;
+}

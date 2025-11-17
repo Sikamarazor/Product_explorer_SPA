@@ -1,0 +1,19 @@
+<section *ngIf="product">
+    <div class="top-bar">
+          <button mat-button (click)="goBack()">Back</button>
+        </div>
+    <mat-card>
+        <mat-card-title>{{ product.name }}</mat-card-title>
+        <mat-card-subtitle>Price: {{ product.price }}</mat-card-subtitle>
+        <mat-card-content>
+            <p>{{ product.description }}</p>
+            <p><strong>Date created:</strong> {{ product.createdAt | date:'medium' }}</p>
+        </mat-card-content>
+
+        <button mat-icon-button color="warn" (click)="toggleFavorite(product.id)">
+            <mat-icon>
+                {{ service.isFavorite(product.id) ? 'favorite' : 'favorite_border' }}
+            </mat-icon>
+        </button>
+    </mat-card>
+</section>
