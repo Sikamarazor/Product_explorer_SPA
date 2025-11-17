@@ -7,7 +7,7 @@
         <mat-card-subtitle>Price: {{ product.price }}</mat-card-subtitle>
         <mat-card-content>
             <p>{{ product.description }}</p>
-            <p><strong>Created at:</strong> {{ product.createdAt | date:'medium' }}</p>
+            <p><strong>Date created:</strong> {{ product.createdAt | date:'medium' }}</p>
         </mat-card-content>
 
         <button mat-icon-button color="warn" (click)="toggleFavorite(product.id)">

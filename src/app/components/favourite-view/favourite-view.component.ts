@@ -14,18 +14,26 @@ import { map } from 'rxjs/operators';
 })
 export class FavouriteViewComponent {
 
+  // Inject the ProductManagementService to access product state and favorite logic
   public productState = inject(ProductManagementService);
-  favorites$ = this.productState.products$.pipe(
-      map(products =>
-        products.filter(p => this.productState.isFavorite(p.id))
-      )
-    );
-  
-  ngOnInit() {
-    
-  }
 
+  // Create an observable of favorited products
+  // - products$ emits the list of all products
+  // - map() filters the products to only include those marked as favorite
+  favorites$ = this.productState.products$.pipe(
+    map(products =>
+      products.filter(p => this.productState.isFavorite(p.id)) // Keep only products marked as favorite
+    )
+  );
+
+  // Lifecycle hook for initialization
+  // Currently empty, but can be used for additional setup if needed
+  ngOnInit() { }
+
+  // Toggle a product as favorite or remove from favorites
+  // Calls the service method to update the state
   toggleFavorite(productId: string) {
     this.productState.toggleFavorite(productId);
   }
+
 }

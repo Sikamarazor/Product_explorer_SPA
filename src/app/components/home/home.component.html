@@ -1,16 +1,71 @@
-<section>
-      <h2>Catalog</h2>
-      <div class="grid">
-        <mat-card *ngFor="let product of products$ | async" (click)="openDetails(product.id)">
-          <mat-card-title>{{ product.name }}</mat-card-title>
-          <mat-card-subtitle>Price: {{ product.price }}</mat-card-subtitle>
-          <mat-card-content>{{ product.description }}</mat-card-content>
+<section class="catalog-container">
 
-          <button mat-icon-button color="warn" (click)="toggleFavorite(product.id, $event)">
-            <mat-icon>
-              {{ productState.isFavorite(product.id) ? 'favorite' : 'favorite_border' }}
-            </mat-icon>
-          </button>
-        </mat-card>
-      </div>
-    </section>
+    <h2>Catalog</h2>
+
+    <!-- Show message if there are no products -->
+    <ng-container *ngIf="(products$ | async)?.length === 0; else tableTemplate">
+        <p class="empty">No products added</p>
+    </ng-container>
+
+    <ng-template #tableTemplate>
+
+        <!-- Filter -->
+        <mat-form-field appearance="outline" class="filter-box">
+            <mat-label>Filter products</mat-label>
+            <input matInput [formControl]="filterControl" placeholder="Search by name or description">
+        </mat-form-field>
+
+        <!-- Material Table -->
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 clickable-table">
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Name
+                </th>
+                <td mat-cell *matCellDef="let product">
+                    {{ product.name }}
+                </td>
+            </ng-container>
+
+            <!-- Price Column -->
+            <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Price
+                </th>
+                <td mat-cell *matCellDef="let product">
+                    R {{ product.price }}
+                </td>
+            </ng-container>
+
+            <!-- Description Column -->
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef>Description</th>
+                <td mat-cell *matCellDef="let product">
+                    {{ product.description }}
+                </td>
+            </ng-container>
+
+            <!-- Favorite Column -->
+            <ng-container matColumnDef="favorite">
+                <th mat-header-cell *matHeaderCellDef>Fav</th>
+                <td mat-cell *matCellDef="let product" class="fav-col">
+                    <button mat-icon-button color="warn" (click)="toggleFavorite(product.id, $event)">
+                        <mat-icon>
+                            {{ productState.isFavorite(product.id) ? 'favorite' : 'favorite_border' }}
+                        </mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <!-- Row Definitions -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="openDetails(row.id)"></tr>
+
+        </table>
+
+        <!-- Paginator -->
+        <mat-paginator [pageSize]="6" showFirstLastButtons></mat-paginator>
+
+    </ng-template>
+</section>

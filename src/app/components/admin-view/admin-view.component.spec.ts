@@ -1,79 +1,62 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { AdminViewComponent } from './admin-view.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { By } from '@angular/platform-browser';
-import { ProductManagementService } from '../../services/product-management.service';
+import { AddproductsComponent } from '../addproducts/addproducts.component';
+import { ManageproductsComponent } from '../manageproducts/manageproducts.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { Product } from '../../models/product.model';
+import { CommonModule } from '@angular/common';
 
 describe('AdminViewComponent', () => {
   let component: AdminViewComponent;
   let fixture: ComponentFixture<AdminViewComponent>;
-  let service: ProductManagementService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AdminViewComponent,
-        ReactiveFormsModule,
-        MatCardModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule
-      ],
-      providers: [ProductManagementService]
-    })
-    .compileComponents();
+      imports: [
+        AdminViewComponent,
+        AddproductsComponent,
+        ManageproductsComponent,
+        MatTabsModule,
+        CommonModule
+      ]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AdminViewComponent);
     component = fixture.componentInstance;
-    service = TestBed.inject(ProductManagementService);
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the admin view component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should add a product via form', () => {
-    const form = component.form;
-    form.controls['name'].setValue('New Product');
-    form.controls['price'].setValue(123);
-    form.controls['description'].setValue('Test desc');
-
-    expect(form.valid).toBeTrue();
-
-    // Spy on service
-    spyOn(service, 'addProduct').and.callThrough();
-
-    const button = fixture.debugElement.query(By.css('button[type="submit"]'));
-    button.nativeElement.click();
-
-    fixture.detectChanges();
-
-    expect(service.addProduct).toHaveBeenCalled();
-    const added = service.currentProducts.find(p => p.name === 'New Product');
-    expect(added).toBeTruthy();
-    expect(added!.price).toBe(123);
+  it('should default to View Products tab', () => {
+    expect(component.selectedTab).toBe(0);
   });
 
-  it('should reset the form after submit', () => {
-    component.form.controls['name'].setValue('Test');
-    component.form.controls['price'].setValue(50);
-    component.onSubmit();
+  it('should switch to Add Product tab and set productToEdit$ when onEditProduct is called', () => {
+    const mockProduct: Product = { id: '1', name: 'Test', price: 100, description: 'Desc', createdAt: Date.now() };
 
-    expect(component.form.value.name).toBeNull();
-    expect(component.form.value.price).toBeNull();
+    component.onEditProduct(mockProduct);
+
+    component.productToEdit$.subscribe(product => {
+      expect(product).toEqual(mockProduct);
+    });
+
+    expect(component.selectedTab).toBe(1);
   });
 
-  it('should disable submit button when form invalid', () => {
-    component.form.controls['name'].setValue('');
-    component.form.controls['price'].setValue(null);
+  it('should reset productToEdit$ and switch back to View Products tab onProductSaved', () => {
+    component.selectedTab = 1;
+    component.productToEdit$.next({ id: '1', name: 'Test', price: 100, description: 'Desc', createdAt: Date.now() });
 
-    fixture.detectChanges();
-    const button = fixture.debugElement.query(By.css('button[type="submit"]'));
-    expect(button.nativeElement.disabled).toBeTrue();
+    component.onProductSaved();
+
+    component.productToEdit$.subscribe(product => {
+      expect(product).toBeNull();
+    });
+
+    expect(component.selectedTab).toBe(0);
   });
+
 });

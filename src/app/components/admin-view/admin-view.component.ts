@@ -5,43 +5,33 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ProductManagementService } from '../../services/product-management.service';
+import { CommonModule } from '@angular/common';
+import { MatTabsModule } from '@angular/material/tabs';
+import { AddproductsComponent } from '../addproducts/addproducts.component';
+import { ManageproductsComponent } from '../manageproducts/manageproducts.component';
+import { BehaviorSubject } from 'rxjs';
+import { Product } from '../../models/product.model';
 
 @Component({
   selector: 'app-admin-view',
   imports: [
-    ReactiveFormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule
+    CommonModule, MatTabsModule, AddproductsComponent, ManageproductsComponent
   ],
   templateUrl: './admin-view.component.html',
   styleUrl: './admin-view.component.scss'
 })
 export class AdminViewComponent {
+  selectedTab = 0; // default to View Products
+  productToEdit$ = new BehaviorSubject<Product | null>(null);
 
-  form: FormGroup;
-
-  private productState = inject(ProductManagementService)
-
-  constructor(
-    private fb: FormBuilder
-  ) {
-    this.form = this.fb.group({
-    name: ['', Validators.required],
-    price: [0, Validators.required],
-    description: [''],
-  });
+  onEditProduct(product: any) {
+    this.productToEdit$.next(product);  // send product to AddProductComponent
+    this.selectedTab = 1;               // switch to Add Product tab
   }
 
-  onSubmit() {
-    const newProduct = {
-      ...this.form.value,
-      id: crypto.randomUUID(),
-      createdAt: Date.now(),
-    };
-
-    this.productState.addProduct(newProduct);
-    this.form.reset();
+  onProductSaved() {
+    this.selectedTab = 0;               // switch back to View Products
+    this.productToEdit$.next(null);     // reset
   }
+
 }

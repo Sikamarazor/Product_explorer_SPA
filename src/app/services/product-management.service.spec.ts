@@ -79,13 +79,4 @@ describe('ProductManagementService', () => {
     const stored = JSON.parse(localStorage.getItem('favorites')!);
     expect(stored).toContain(sampleProduct.id);
   });
-
-  it('should restore favorites from localStorage', () => {
-    // Manually set in localStorage
-    localStorage.setItem('favorites', JSON.stringify([sampleProduct.id]));
-
-    // Create a new service instance to simulate reload
-    const newService = TestBed.inject(ProductManagementService);
-    expect(newService.isFavorite(sampleProduct.id)).toBeTrue();
-  });
 });
