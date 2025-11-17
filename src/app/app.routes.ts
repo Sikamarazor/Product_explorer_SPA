@@ -23,6 +23,12 @@ export const routes: Routes = [
         .then(m => m.ADMIN_ROUTES)
     },
     {
+        path: 'product/:id',
+        loadComponent: () =>
+        import('./components/product-details-view/product-details-view.component')
+            .then(m => m.ProductDetailsViewComponent),
+    },
+    {
         path: '**',
         redirectTo: 'home',
     },

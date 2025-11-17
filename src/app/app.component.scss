@@ -1,6 +1,8 @@
 mat-toolbar {
     display: flex;
     align-items: center;
+    padding: 0 16px;
+    background-color: #22567c;
 }
 
 .spacer {
@@ -9,4 +11,22 @@ mat-toolbar {
 
 button {
     margin-left: 8px;
+}
+
+.nav-button {
+    color:#fff;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.main-content {
+    padding: 5px;
+    margin: 5px;
+    border: #22567c solid 1px;
+    border-radius: 5px;
+    min-height: calc(100vh - 74px - 10px); 
+    /* 64px = default Material toolbar height */
 }

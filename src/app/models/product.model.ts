@@ -3,6 +3,5 @@ export interface Product {
     name: string;
     description: string;
     price: number;
-    thumbnailUrl?: string;
     createdAt?: number; // ISO date
 }

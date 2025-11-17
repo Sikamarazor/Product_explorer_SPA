@@ -24,8 +24,9 @@ describe('ProductManagementService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should start with empty products', () => {
+  it('should start with empty products and favorites', () => {
     expect(service.currentProducts.length).toBe(0);
+    expect(service.isFavorite(sampleProduct.id)).toBeFalse();
   });
 
   it('should add a product', () => {
@@ -60,5 +61,31 @@ describe('ProductManagementService', () => {
   it('should return correct currentProducts synchronously', () => {
     service.addProduct(sampleProduct);
     expect(service.currentProducts[0].name).toBe('Test Product');
+  });
+
+  // --- Favorites tests ---
+  it('should toggle a product as favorite', () => {
+    expect(service.isFavorite(sampleProduct.id)).toBeFalse();
+
+    service.toggleFavorite(sampleProduct.id);
+    expect(service.isFavorite(sampleProduct.id)).toBeTrue();
+
+    service.toggleFavorite(sampleProduct.id);
+    expect(service.isFavorite(sampleProduct.id)).toBeFalse();
+  });
+
+  it('should persist favorites to localStorage', () => {
+    service.toggleFavorite(sampleProduct.id);
+    const stored = JSON.parse(localStorage.getItem('favorites')!);
+    expect(stored).toContain(sampleProduct.id);
+  });
+
+  it('should restore favorites from localStorage', () => {
+    // Manually set in localStorage
+    localStorage.setItem('favorites', JSON.stringify([sampleProduct.id]));
+
+    // Create a new service instance to simulate reload
+    const newService = TestBed.inject(ProductManagementService);
+    expect(newService.isFavorite(sampleProduct.id)).toBeTrue();
   });
 });

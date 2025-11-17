@@ -4,6 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ProductManagementService } from '../../services/product-management.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -16,9 +17,14 @@ export class HomeComponent {
 
    products$ = this.productState.products$;
 
-  constructor() {}
+  constructor(private router: Router) {}
 
-  toggleFavorite(productId: string) {
+  openDetails(id: string) {
+    this.router.navigate(['/product', id]);
+  }
+  toggleFavorite(productId: string, event: Event) {
+
+    event.stopPropagation()
     this.productState.toggleFavorite(productId);
   }
 }

@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Product } from '../models/product.model';
 
+const FAVORITES_KEY = 'favorites';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -10,6 +12,9 @@ export class ProductManagementService {
 
   private productsSubject = new BehaviorSubject<Product[]>([]);
   products$ = this.productsSubject.asObservable();
+
+  private favoritesSubject = new BehaviorSubject<Set<string>>(this.readFavorites());
+  favorites$ = this.favoritesSubject.asObservable();
 
   constructor() {
     const stored = localStorage.getItem(this.STORAGE_KEY);
@@ -44,5 +49,29 @@ export class ProductManagementService {
     const updated = this.currentProducts.filter(p => p.id !== id);
     this.productsSubject.next(updated);
     this.persist(updated);
+  }
+
+  // --- FAVORITES MANAGEMENT ---
+  toggleFavorite(productId: string) {
+    const current = new Set(this.favoritesSubject.value);
+    if (current.has(productId)) current.delete(productId);
+    else current.add(productId);
+
+    this.favoritesSubject.next(current);
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(Array.from(current)));
+  }
+
+  isFavorite(productId: string): boolean {
+    return this.favoritesSubject.value.has(productId);
+  }
+
+  private readFavorites(): Set<string> {
+    try {
+      const raw = localStorage.getItem(FAVORITES_KEY);
+      if (!raw) return new Set();
+      return new Set(JSON.parse(raw));
+    } catch {
+      return new Set();
+    }
   }
 }
